@@ -1,1 +1,219 @@
+public class Main {
 
+    // =========================
+    // Nodo Simple
+    // =========================
+    static class NodoEstudiante {
+        String carnet;
+        String nombre;
+        double nota;
+        NodoEstudiante siguiente;
+
+        public NodoEstudiante(String carnet, String nombre, double nota) {
+            this.carnet = carnet;
+            this.nombre = nombre;
+            this.nota = nota;
+            this.siguiente = null;
+        }
+    }
+
+    // =========================
+    // Lista Simplemente Enlazada
+    // =========================
+    static class ListaEstudiantes {
+        NodoEstudiante cabeza;
+
+        public ListaEstudiantes() {
+            cabeza = null;
+        }
+
+        public void agregarInicio(String carnet, String nombre, double nota) {
+            NodoEstudiante nuevo = new NodoEstudiante(carnet, nombre, nota);
+            nuevo.siguiente = cabeza;
+            cabeza = nuevo;
+        }
+
+        public void agregarFinal(String carnet, String nombre, double nota) {
+            NodoEstudiante nuevo = new NodoEstudiante(carnet, nombre, nota);
+
+            if (cabeza == null) {
+                cabeza = nuevo;
+                return;
+            }
+
+            NodoEstudiante actual = cabeza;
+            while (actual.siguiente != null) {
+                actual = actual.siguiente;
+            }
+
+            actual.siguiente = nuevo;
+        }
+
+        public void insertarOrdenado(String carnet, String nombre, double nota) {
+            NodoEstudiante nuevo = new NodoEstudiante(carnet, nombre, nota);
+
+            if (cabeza == null || carnet.compareTo(cabeza.carnet) < 0) {
+                nuevo.siguiente = cabeza;
+                cabeza = nuevo;
+                return;
+            }
+
+            NodoEstudiante actual = cabeza;
+            while (actual.siguiente != null &&
+                   carnet.compareTo(actual.siguiente.carnet) > 0) {
+                actual = actual.siguiente;
+            }
+
+            nuevo.siguiente = actual.siguiente;
+            actual.siguiente = nuevo;
+        }
+
+        public void eliminarPorCarnet(String carnet) {
+            if (cabeza == null) return;
+
+            if (cabeza.carnet.equals(carnet)) {
+                cabeza = cabeza.siguiente;
+                return;
+            }
+
+            NodoEstudiante actual = cabeza;
+            while (actual.siguiente != null &&
+                   !actual.siguiente.carnet.equals(carnet)) {
+                actual = actual.siguiente;
+            }
+
+            if (actual.siguiente != null) {
+                actual.siguiente = actual.siguiente.siguiente;
+            }
+        }
+
+        public void mostrar() {
+            NodoEstudiante actual = cabeza;
+            while (actual != null) {
+                System.out.println(actual.carnet + " - " + actual.nombre + " - " + actual.nota);
+                actual = actual.siguiente;
+            }
+        }
+    }
+
+    // =========================
+    // Nodo Doble
+    // =========================
+    static class NodoEstudianteDoble {
+        String carnet;
+        String nombre;
+        double nota;
+        NodoEstudianteDoble siguiente;
+        NodoEstudianteDoble anterior;
+
+        public NodoEstudianteDoble(String carnet, String nombre, double nota) {
+            this.carnet = carnet;
+            this.nombre = nombre;
+            this.nota = nota;
+            this.siguiente = null;
+            this.anterior = null;
+        }
+    }
+
+    // =========================
+    // Lista Doblemente Enlazada
+    // =========================
+    static class ListaDobleEstudiantes {
+        NodoEstudianteDoble cabeza;
+
+        public ListaDobleEstudiantes() {
+            cabeza = null;
+        }
+
+        public void agregarInicio(String carnet, String nombre, double nota) {
+            NodoEstudianteDoble nuevo = new NodoEstudianteDoble(carnet, nombre, nota);
+
+            if (cabeza != null) {
+                cabeza.anterior = nuevo;
+                nuevo.siguiente = cabeza;
+            }
+
+            cabeza = nuevo;
+        }
+
+        public void agregarFinal(String carnet, String nombre, double nota) {
+            NodoEstudianteDoble nuevo = new NodoEstudianteDoble(carnet, nombre, nota);
+
+            if (cabeza == null) {
+                cabeza = nuevo;
+                return;
+            }
+
+            NodoEstudianteDoble actual = cabeza;
+            while (actual.siguiente != null) {
+                actual = actual.siguiente;
+            }
+
+            actual.siguiente = nuevo;
+            nuevo.anterior = actual;
+        }
+
+        public void eliminarPorCarnet(String carnet) {
+            if (cabeza == null) return;
+
+            NodoEstudianteDoble actual = cabeza;
+
+            while (actual != null && !actual.carnet.equals(carnet)) {
+                actual = actual.siguiente;
+            }
+
+            if (actual == null) return;
+
+            if (actual.anterior != null) {
+                actual.anterior.siguiente = actual.siguiente;
+            } else {
+                cabeza = actual.siguiente;
+            }
+
+            if (actual.siguiente != null) {
+                actual.siguiente.anterior = actual.anterior;
+            }
+        }
+
+        public void mostrar() {
+            NodoEstudianteDoble actual = cabeza;
+            while (actual != null) {
+                System.out.println(actual.carnet + " - " + actual.nombre + " - " + actual.nota);
+                actual = actual.siguiente;
+            }
+        }
+    }
+
+    // =========================
+    // MAIN
+    // =========================
+    public static void main(String[] args) {
+
+        System.out.println("=== LISTA SIMPLE ===");
+        ListaEstudiantes lista = new ListaEstudiantes();
+
+        lista.agregarInicio("202300001", "Ana", 85.0);
+        lista.agregarInicio("202300002", "Luis", 90.0);
+        lista.agregarFinal("202300003", "Maria", 78.0);
+
+        lista.mostrar();
+
+        System.out.println("---- Eliminar ----");
+        lista.eliminarPorCarnet("202300001");
+        lista.mostrar();
+
+
+        System.out.println("\n=== LISTA DOBLE ===");
+        ListaDobleEstudiantes listaDoble = new ListaDobleEstudiantes();
+
+        listaDoble.agregarInicio("202300001", "Ana", 85.0);
+        listaDoble.agregarInicio("202300002", "Luis", 90.0);
+        listaDoble.agregarFinal("202300003", "Maria", 78.0);
+
+        listaDoble.mostrar();
+
+        System.out.println("---- Eliminar ----");
+        listaDoble.eliminarPorCarnet("202300001");
+        listaDoble.mostrar();
+    }
+}
